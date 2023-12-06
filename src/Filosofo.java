@@ -31,12 +31,12 @@ public class Filosofo implements Runnable {  //fornece uma implementação do me
                 //filósofo está pensando
                 acao(": Pensando");
                 //aqui começa a região crítica
-                semaforo.acquire();
                 synchronized (garfoEsquerdo) { // apenas um filósofo pode pegar o garfo à esquerda. Caso outro tente pegá-lo, ele aguardará até que o seja liberado
                     acao(": Pegou o garfo esquerdo");
                     synchronized (garfoDireito) {//garante que apenas um filósofo por vez possa pegar o garfo à direita.
                         // Isso evita deadlock, onde todos os filósofos pegariam um garfo à esquerda e esperariam indefinidamente por um garfo à direita.
                         //filósofo está comendo
+                        semaforo.acquire();
                         Filosofo.this.setFome(Filosofo.this.getFome() + 1);
                         acao(": Pegou o garfo direito - comendo - Matou " + Filosofo.this.getFome() + "/3 da fome");
                         //filósofo terminou de comer

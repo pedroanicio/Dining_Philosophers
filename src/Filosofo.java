@@ -1,12 +1,12 @@
 import java.util.concurrent.Semaphore;
 
+
 public class Filosofo implements Runnable {  //fornece uma implementação do metodo run(), que tem o objetivo de executar uma thread
     //garfos de cada lado do filósofo
     private Object garfoEsquerdo;
     private Object garfoDireito;
     private int fome;
     private static Semaphore semaforo = new Semaphore(1); // Semáforo global para controlar o acesso à região crítica
-
 
 
     public int getFome() {
@@ -23,13 +23,21 @@ public class Filosofo implements Runnable {  //fornece uma implementação do me
         this.fome = fome;
     }
 
-
     @Override
     public void run() { //metodo run() é chamado quando a thread é iniciada
         try {
             while (Filosofo.this.fome < 3) {
                 //filósofo está pensando
                 acao(": Pensando");
+
+                // Introduzir atraso deliberado para alguns filósofos (simulando inanição)
+                if (Thread.currentThread().getName().equals("Filosofo "+ 1)) {
+                    Thread.sleep(35000); // Atraso de 20 segundos para Filosofo aleatoriamente escolhido
+                    Thread.currentThread().interrupt();
+                    System.out.println("Filosofo "+1+ " morreu de starvation!");
+                    System.exit(0);
+                }
+
                 //aqui começa a região crítica
                 synchronized (garfoEsquerdo) { // apenas um filósofo pode pegar o garfo à esquerda. Caso outro tente pegá-lo, ele aguardará até que o seja liberado
                     acao(": Pegou o garfo esquerdo");
